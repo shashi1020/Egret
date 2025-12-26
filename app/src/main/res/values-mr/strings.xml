@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_satellite">सॅटेलाइट</string>
+    <string name="nav_weather">हवामान</string>
+    <string name="nav_market">बाजारभाव</string>
+
+    <string name="reg_title">नवीन शेत नोंदणी करा</string>
+    <string name="reg_draw_instruction">तुमच्या शेताची सीमा नकाशावर काढा (किमान ३ बिंदू):</string>
+    <string name="reg_permission_btn">स्थान परवानगी द्या</string>
+    <string name="reg_clear">पुसून टाका</string>
+    <string name="reg_confirm_shape">आकार निश्चित करा</string>
+    <string name="reg_field_name">शेताचे नाव</string>
+    <string name="reg_crop_name">पीकाचे नाव</string>
+    <string name="reg_save_btn">शेत जतन करा</string>
+    <string name="reg_saving">जतन करत आहे...</string>
+    <string name="reg_success">शेत यशस्वीरित्या जतन झाले!</string>
+    <string name="reg_error_min_points">किमान ३ बिंदू जोडा.</string>
+    <string name="reg_error_empty">कृपया सर्व माहिती भरा.</string>
+    <string name="reg_error_shape">कृपया नकाशावर आकार निश्चित करा.</string>
+    <string name="msg_points_selected">%d बिंदू निवडले</string>
+    <string name="msg_shape_fixed">आकार निश्चित झाला आहे.</string>
+
+
+    <string name="market_title">बाजार भाव</string>
+    <string name="market_search_hint">तुमचे पीक शोधा (उदा. कांदा, गहू)</string>
+    <string name="market_filter_btn">प्रगत फिल्टर्स</string>
+    <string name="market_loading">नवीनतम बाजार माहिती मिळवत आहे...</string>
+    <string name="market_error_prefix">⚠️ त्रुटी:</string>
+    <string name="market_results_found">📦 %d निकाल सापडले</string>
+    <string name="market_no_results">तुमच्या फिल्टरसाठी कोणताही डेटा सापडला नाही.\nकृपया शोध किंवा फिल्टर बदला.</string>
+    <string name="market_modal_price">सरासरी भाव:</string>
+    <string name="market_approx_kg">अंदाजे प्रति किलो:</string>
+    <string name="market_arrival_date">आवक तारीख:</string>
+    <string name="market_loc_not_found">स्थान सापडले नाही</string>
+    <string name="market_apply">लागू करा</string>
+    <string name="market_cancel">रद्द करा</string>
+    <string name="market_optional_market">बाजार (पर्यायी)</string>
+    <string name="market_optional_state">राज्य (पर्यायी)</string>
+    <string name="market_optional_district">जिल्हा (पर्यायी)</string>
+
+
+    <string name="my_farms_title">माझी शेतं</string>
+    <string name="my_farms_loading">तुमची शेतं लोड होत आहेत...</string>
+    <string name="my_farms_error_title">शेतांची माहिती मिळाली नाही.</string>
+    <string name="my_farms_error_msg">नेटवर्क तपासा आणि परत प्रयत्न करा.</string>
+    <string name="my_farms_retry">पुन्हा प्रयत्न करा</string>
+    <string name="my_farms_empty_title">अजून शेत नोंदणीकृत नाही.</string>
+    <string name="my_farms_empty_msg">खालील बटणावर टॅप करून तुमचे पहिले शेत नोंदणी करा.</string>
+    <string name="my_farms_add_new">नवीन शेत जोडा</string>
+    <string name="my_farms_header_title">तुमची सर्व नोंदणीकृत शेतं</string>
+    <string name="my_farms_header_subtitle">शेतावर टॅप करा आणि NDVI / तब्येत पहा.</string>
+    <string name="my_farms_count_suffix">शेतं</string>
+    <string name="my_farms_unknown_name">नाव उपलब्ध नाही</string>
+    <string name="my_farms_view_map_loc">शेताचे स्थान नकाशावर पाहा</string>
+    <string name="my_farms_check_health">NDVI / शेताची तब्येत पहा</string>
+
+
+    <string name="weather_title">क्लाइमेट-डॅश</string>
+    <string name="weather_subtitle">शेतकऱ्यांसाठी हवामान मार्गदर्शक</string>
+    <string name="weather_loading">हवामान माहिती लोड होत आहे...</string>
+    <string name="weather_error_title">हवामान माहिती मिळाली नाही.</string>
+    <string name="weather_error_msg">नेटवर्क तपासा आणि पुन्हा प्रयत्न करा.</string>
+    <string name="weather_error_prefix">त्रुटी:</string>
+    <string name="weather_today_header">आजचे हवामान</string>
+    <string name="weather_avg_temp">सरासरी तापमान: %s°C</string>
+    <string name="weather_rain_chance_format">%d%% पाऊस शक्यता</string>
+    <string name="weather_total_rain">एकूण पाऊस (mm)</string>
+    <string name="weather_max_wind">कमाल वारा (m/s)</string>
+    <string name="weather_avg_temp_label">सरासरी तापमान (°C)</string>
+    <string name="weather_rain_chance_label">पाऊस शक्यता</string>
+    <string name="weather_next_days_header">पुढील दिवसांचे हवामान</string>
+    <string name="weather_item_desc">शेतात काम करण्यासाठी हवामानाचे संक्षिप्त चित्र.</string>
+</resources>

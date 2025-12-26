@@ -1,0 +1,112 @@
+<resources>
+    <string name="app_name">Egret</string>
+    <string name="nav_satellite">Satellite</string>
+    <string name="nav_weather">Weather</string>
+    <string name="nav_market">Market</string>
+    <string name="google_maps_key">AIzaSyDLMf9DAJ9t_Qvcwoy_mDN4uzRAtJqoWvc</string>
+    <string name="default_web_client_id">767615137863-6r9ofco3p3cgtdsrjro3e502khgrifnk.apps.googleusercontent.com</string>
+
+    <string name="dashboard_greeting">Hello Farmer Friend 👋</string>
+    <string name="dashboard_subtitle">Satellite monitoring and AI advice for all your farms in one place.</string>
+    <string name="dashboard_add_farm">Add New Farm</string>
+    <string name="dashboard_add_farm_desc">Draw boundaries and check NDVI</string>
+    <string name="dashboard_my_farms">My Farms</string>
+    <string name="dashboard_view_registered">View registered farms</string>
+    <string name="dashboard_no_farms">Will appear here after registration</string>
+    <string name="dashboard_recent_farms">My Registered Farms</string>
+    <string name="dashboard_view_all">View All</string>
+    <string name="dashboard_explore">Explore EGRET services using tabs below</string>
+    <string name="dashboard_get_started">Get Started</string>
+    <string name="dashboard_register_desc">Register your farm for AI advice.</string>
+    <string name="register_btn">Register</string>
+
+
+    <string name="insights_title">Farm Insights</string>
+    <string name="insights_loading">Fetching satellite insights…</string>
+    <string name="insights_error_title">Could not load insights</string>
+    <string name="insights_retry">Retry</string>
+    <string name="insights_refresh">Refresh satellite data</string>
+
+    <string name="section_overview">Overview</string>
+    <string name="section_ndvi">NDVI Insight</string>
+    <string name="section_advisory">Advisory</string>
+    <string name="section_history">History &amp; Trend</string>
+
+    <string name="label_crop">Crop</string>
+    <string name="label_area">Area</string>
+    <string name="label_last_pass">Last satellite pass</string>
+    <string name="label_unknown_crop">Unknown crop</string>
+    <string name="label_ndvi_level">NDVI Level</string>
+    <string name="label_recommended_actions">Recommended Actions</string>
+    <string name="label_recent_passes">Recent Passes</string>
+    <string name="msg_no_stats">Statistics not available for this pass.</string>
+    <string name="msg_trend_unavailable">Trend message not available.</string>
+    <string name="msg_not_enough_data">Not enough data for chart.</string>
+    <string name="reg_title">Register New Farm</string>
+    <string name="reg_draw_instruction">Draw farm boundaries on map (min 3 points):</string>
+    <string name="reg_permission_btn">Grant Location Permission</string>
+    <string name="reg_clear">Clear</string>
+    <string name="reg_confirm_shape">Confirm Shape</string>
+    <string name="reg_field_name">Farm Name</string>
+    <string name="reg_crop_name">Crop Name</string>
+    <string name="sowing_crop_date">Crop Sowing Date</string>
+    <string name="reg_save_btn">Save Farm</string>
+    <string name="reg_saving">Saving...</string>
+    <string name="reg_success">Farm saved successfully!</string>
+    <string name="reg_error_min_points">Add at least 3 points.</string>
+    <string name="reg_error_empty">Please fill all fields.</string>
+    <string name="reg_error_shape">Please confirm the shape on map.</string>
+    <string name="msg_points_selected">%d points selected</string>
+    <string name="msg_shape_fixed">Shape fixed. Ready to save.</string>
+
+
+    <string name="market_title">Market Pulse</string>
+    <string name="market_search_hint">Search for your crop (e.g., Onion, Wheat)</string>
+    <string name="market_filter_btn">Advanced Filters</string>
+    <string name="market_loading">Fetching the latest market data...</string>
+    <string name="market_error_prefix">⚠️ Error:</string>
+    <string name="market_results_found">📦 %d results found</string>
+    <string name="market_no_results">No market data found for your filters.\nTry adjusting your search or filters.</string>
+    <string name="market_modal_price">Modal Price:</string>
+    <string name="market_approx_kg">Approx. per kg:</string>
+    <string name="market_arrival_date">Arrival Date:</string>
+    <string name="market_loc_not_found">Location not found</string>
+    <string name="market_apply">Apply</string>
+    <string name="market_cancel">Cancel</string>
+    <string name="market_optional_market">Market (Optional)</string>
+    <string name="market_optional_state">State (Optional)</string>
+    <string name="market_optional_district">District (Optional)</string>
+
+
+    <string name="my_farms_title">My Farms</string>
+    <string name="my_farms_loading">Loading your farms...</string>
+    <string name="my_farms_error_title">Could not fetch farms.</string>
+    <string name="my_farms_error_msg">Check network and try again.</string>
+    <string name="my_farms_retry">Retry</string>
+    <string name="my_farms_empty_title">No farms registered yet.</string>
+    <string name="my_farms_empty_msg">Tap the button below to register your first farm.</string>
+    <string name="my_farms_add_new">Add New Farm</string>
+    <string name="my_farms_header_title">All Registered Farms</string>
+    <string name="my_farms_header_subtitle">Tap on a farm to view NDVI / Health.</string>
+    <string name="my_farms_count_suffix">Farms</string>
+    <string name="my_farms_unknown_name">Name not available</string>
+    <string name="my_farms_view_map_loc">View location on map</string>
+    <string name="my_farms_check_health">Check Health / NDVI</string>
+
+    <string name="weather_title">CLIMATE-DASH</string>
+    <string name="weather_subtitle">Weather Guide for Farmers</string>
+    <string name="weather_loading">Loading weather data...</string>
+    <string name="weather_error_title">Weather data unavailable.</string>
+    <string name="weather_error_msg">Check network and try again.</string>
+    <string name="weather_error_prefix">Error:</string>
+    <string name="weather_today_header">Today\'s Weather</string>
+    <string name="weather_avg_temp">Avg Temp: %s°C</string>
+    <string name="weather_rain_chance_format">%d%% Rain Chance</string>
+    <string name="weather_total_rain">TOTAL RAIN (mm)</string>
+    <string name="weather_max_wind">MAX WIND (m/s)</string>
+    <string name="weather_avg_temp_label">AVG TEMP (°C)</string>
+    <string name="weather_rain_chance_label">RAIN CHANCE</string>
+    <string name="weather_next_days_header">Upcoming Forecast</string>
+    <string name="weather_item_desc">Weather overview for farm planning.</string>
+
+</resources>
