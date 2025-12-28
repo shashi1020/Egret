@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.ksp)
     id("com.google.gms.google-services")
+    id("org.jetbrains.kotlin.plugin.serialization")
+    kotlin("plugin.parcelize")
 }
 
 android {
@@ -52,6 +54,7 @@ dependencies {
     //room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
+    implementation(libs.androidx.compose.runtime)
 
     // If you're using annotation processing (KAPT)
     ksp(libs.room.compiler)
@@ -126,7 +129,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:21.2.0")
 //    We use System UI Controller.
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.34.0")
-
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
 
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DateRange
@@ -39,6 +40,61 @@ import com.ai.egret.utils.formatDatePretty
 import com.ai.egret.utils.toPercentage
 import com.ai.egret.viewmodels.FarmInsightsUiState
 import com.ai.egret.viewmodels.FarmInsightsViewModel
+
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun FarmInsightsScreen(
+//    navController: NavController,
+//    farmId: Int,
+//    viewModel: FarmInsightsViewModel = hiltViewModel()
+//) {
+//    val uiState by viewModel.uiState.collectAsState()
+//
+//    LaunchedEffect(farmId) {
+//        viewModel.loadInsights(farmId = farmId)
+//    }
+//
+//    Scaffold(
+//        topBar = {
+//            TopAppBar(
+//                title = { Text("Crop Doctor", fontWeight = FontWeight.Bold) },
+//                navigationIcon = {
+//                    IconButton(onClick = { navController.popBackStack() }) {
+//                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+//                    }
+//                },
+//                actions = {
+//                    IconButton(onClick = { viewModel.loadInsights(farmId) }) {
+//                        Icon(Icons.Default.Refresh, contentDescription = "Refresh")
+//                    }
+//                },
+//                colors = TopAppBarDefaults.topAppBarColors(
+//                    containerColor = MaterialTheme.colorScheme.surface,
+//                    titleContentColor = MaterialTheme.colorScheme.onSurface
+//                )
+//            )
+//        }
+//    ) { innerPadding ->
+//        Box(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(innerPadding)
+//                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
+//        ) {
+//            when (val state = uiState) {
+//                is FarmInsightsUiState.Loading -> LoadingView()
+//                is FarmInsightsUiState.Error -> ErrorView(state.message) { viewModel.loadInsights(farmId) }
+//                is FarmInsightsUiState.Loaded -> {
+//                    // Pass the natural language summary string here
+//                    InsightsContent(
+//                        response = state.data,
+//                        historySummary = state.historySummary
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,7 +128,26 @@ fun FarmInsightsScreen(
                     titleContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
-        }
+        },
+
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    // Entry point to Crop Health flow
+                    navController.navigate("crop_health/$farmId")
+                },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                shape = CircleShape
+            ){
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Analyze Crop"
+                )
+            }
+        },
+
+        floatingActionButtonPosition = FabPosition.End
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -82,9 +157,10 @@ fun FarmInsightsScreen(
         ) {
             when (val state = uiState) {
                 is FarmInsightsUiState.Loading -> LoadingView()
-                is FarmInsightsUiState.Error -> ErrorView(state.message) { viewModel.loadInsights(farmId) }
+                is FarmInsightsUiState.Error ->
+                    ErrorView(state.message) { viewModel.loadInsights(farmId) }
+
                 is FarmInsightsUiState.Loaded -> {
-                    // Pass the natural language summary string here
                     InsightsContent(
                         response = state.data,
                         historySummary = state.historySummary
@@ -94,6 +170,7 @@ fun FarmInsightsScreen(
         }
     }
 }
+
 
 @Composable
 fun InsightsContent(

@@ -1,21 +1,30 @@
 package com.ai.egret.ui.screens
 
-
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Agriculture
+import androidx.compose.material.icons.outlined.Analytics
+import androidx.compose.material.icons.outlined.Coronavirus
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Storefront
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ai.egret.R
@@ -27,11 +36,10 @@ import com.ai.egret.ui.theme.M3Theme
 @Composable
 fun FarmerDashboard(
     navController: NavController,
-    viewModel: MyFarmsViewModel = hiltViewModel() // Inject ViewModel
+    viewModel: MyFarmsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    // Refresh data when screen appears
     LaunchedEffect(Unit) {
         viewModel.loadFarms()
     }
@@ -41,12 +49,7 @@ fun FarmerDashboard(
     M3Theme {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.background,
-            topBar = { EgretDashboardTopBar(navController) },
-            floatingActionButton = {
-                if (hasRegisteredFields) {
-                    AddFieldFAB(navController)
-                }
-            }
+            topBar = { EgretDashboardTopBar(navController) }
         ) { padding ->
 
             if (uiState.isLoading) {
@@ -54,317 +57,333 @@ fun FarmerDashboard(
                     CircularProgressIndicator()
                 }
             } else {
-                Column(
+                LazyColumn(
                     modifier = Modifier
                         .padding(padding)
-                        .padding(horizontal = 16.dp, vertical = 24.dp)
-                        .fillMaxSize()
+                        .fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
 
-                    Text(
-                        text = stringResource(R.string.dashboard_greeting),
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                    Text(
-                        text = stringResource(R.string.dashboard_subtitle),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
-                        modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
-                    )
+                    // 1. Hero / Greeting
+                    item { DashboardHeaderSection() }
 
-                    QuickActionsRow(
-                        navController = navController,
-                        hasRegisteredFields = hasRegisteredFields
-                    )
+                    // 2. Action Grid (Updated with Disease History)
+                    item { ActionGridSection(navController) }
 
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    if (hasRegisteredFields) {
-                        FieldListSection(navController, uiState.farms)
-                    } else {
-                        FieldRegistrationBanner(navController)
+                    // 3. Recent Farms Header
+                    item {
+                        SectionHeader(
+                            title = stringResource(R.string.dashboard_recent_farms),
+                            actionText = stringResource(R.string.dashboard_view_all),
+                            onActionClick = { navController.navigate("my_farms") }
+                        )
                     }
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                    // 4. Farm List
+                    if (!hasRegisteredFields) {
+                        item { EmptyFarmStateCard(navController) }
+                    } else {
+                        items(uiState.farms.take(3)) { farm ->
+                            FarmDashboardCard(
+                                farm = farm,
+                                onClick = { navController.navigate("farm_insights/${farm.id}") }
+                            )
+                        }
+                    }
 
-                    Text(
-                        stringResource(R.string.dashboard_explore),
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(bottom = 8.dp),
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.9f)
-                    )
+                    item { Spacer(modifier = Modifier.height(32.dp)) }
                 }
             }
         }
     }
 }
+
+// -----------------------------------------------------------------------------
+// SECTIONS
+// -----------------------------------------------------------------------------
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EgretDashboardTopBar(navController: NavController) {
-    TopAppBar(
+    CenterAlignedTopAppBar(
         title = {
-            Text(
-                "EGRET",
-                fontWeight = FontWeight.Bold,
-                fontSize = 22.sp,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Default.Eco,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    "EGRET",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
         },
-        // [Optional] Removed navigationIcon if no drawer exists
         actions = {
             IconButton(onClick = { navController.navigate("notifications") }) {
-                Icon(
-                    imageVector = Icons.Default.Notifications,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+                Icon(Icons.Outlined.Notifications, contentDescription = "Notifications")
             }
             IconButton(onClick = { navController.navigate("settings") }) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+                Icon(Icons.Outlined.Settings, contentDescription = "Settings")
             }
         },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background
         )
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FieldRegistrationBanner(navController: NavController) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        onClick = { navController.navigate("register_field") }
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    stringResource(R.string.dashboard_get_started),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-                Text(
-                    stringResource(R.string.dashboard_register_desc),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
-                Button(
-                    onClick = { navController.navigate("register_field") },
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text(stringResource(R.string.register_btn))
-                }
-            }
-            Icon(
-                imageVector = Icons.Default.AddLocationAlt,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .size(80.dp)
-                    .padding(start = 16.dp)
-            )
-        }
+fun DashboardHeaderSection() {
+    Column {
+        Text(
+            text = stringResource(R.string.dashboard_greeting),
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.ExtraBold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Text(
+            text = stringResource(R.string.dashboard_subtitle),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+        )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class) // Added for onClick on Card
 @Composable
-fun QuickActionsRow(
-    navController: NavController,
-    hasRegisteredFields: Boolean
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        // Register new field
-        ElevatedCard(
-            modifier = Modifier
-                .weight(1f)
-                .height(100.dp),
-            shape = RoundedCornerShape(18.dp),
+fun ActionGridSection(navController: NavController) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+
+        // Primary Action: Add Farm
+        DashboardActionCard(
+            title = stringResource(R.string.dashboard_add_farm),
+            subtitle = stringResource(R.string.dashboard_add_farm_desc),
+            icon = Icons.Default.AddLocationAlt,
+            backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             onClick = { navController.navigate("register_field") }
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.AddLocationAlt,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(32.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Column {
-                    Text(
-                        text = stringResource(R.string.dashboard_add_farm),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Text(
-                        text = stringResource(R.string.dashboard_add_farm_desc),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                        lineHeight = 12.sp
-                    )
-                }
-            }
-        }
+        )
 
-        // My Farms
-        ElevatedCard(
-            modifier = Modifier
-                .weight(1f)
-                .height(100.dp),
-            shape = RoundedCornerShape(18.dp),
-            onClick = {
-                navController.navigate("my_farms")
-            }
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Crop,
-                    contentDescription = null,
-                    tint = if (hasRegisteredFields) Color(0xFF4CAF50) else MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(32.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Column {
-                    Text(
-                        text = stringResource(R.string.dashboard_my_farms),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Text(
-                        text = if (hasRegisteredFields) stringResource(R.string.dashboard_view_registered) else stringResource(R.string.dashboard_no_farms),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                        lineHeight = 12.sp
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun FieldListSection(navController: NavController, fields: List<FarmDto>) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+        // Row 1: My Farms & Soil Reports
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                stringResource(R.string.dashboard_recent_farms),
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            TextButton(
-                onClick = { navController.navigate("my_farms") }
-            ) {
-                Text(
-                    text = stringResource(R.string.dashboard_view_all),
-                    style = MaterialTheme.typography.bodyMedium
+            Box(modifier = Modifier.weight(1f)) {
+                DashboardActionCard(
+                    title = stringResource(R.string.dashboard_my_farms),
+                    subtitle = "Manage crops",
+                    icon = Icons.Outlined.Agriculture,
+                    backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    onClick = { navController.navigate("my_farms") }
+                )
+            }
+
+            Box(modifier = Modifier.weight(1f)) {
+                DashboardActionCard(
+                    title = "Soil Reports",
+                    subtitle = "Lab history",
+                    icon = Icons.Outlined.Analytics,
+                    backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                    onClick = { navController.navigate("soil_analysis_history") }
                 )
             }
         }
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(220.dp) // Fixed height for dashboard preview
+        // Row 2: Disease History & Market Prices (New!)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Only show top 3 farms on dashboard
-            items(fields.take(3)) { field ->
-                FieldItem(field = field, onClick = {
-                    // Navigate to Farm Insights using correct ID type
-                    navController.navigate("farm_insights/${field.id}")
-                })
+            Box(modifier = Modifier.weight(1f)) {
+                DashboardActionCard(
+                    title = "Disease History",
+                    subtitle = "Past detections",
+                    icon = Icons.Outlined.Coronavirus, // Looks like a virus/bug
+                    backgroundColor = Color(0xFFFFEBEE), // Light Red
+                    contentColor = Color(0xFFD32F2F),     // Dark Red
+                    onClick = { navController.navigate("crop_health_history") }
+                )
+            }
+
+            Box(modifier = Modifier.weight(1f)) {
+                DashboardActionCard(
+                    title = "Market Prices",
+                    subtitle = "Live rates",
+                    icon = Icons.Outlined.Storefront,
+                    backgroundColor = Color(0xFFE8F5E9), // Light Green
+                    contentColor = Color(0xFF2E7D32),    // Dark Green
+                    onClick = { navController.navigate("market_prices") }
+                )
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FieldItem(field: FarmDto, onClick: () -> Unit) {
+fun DashboardActionCard(
+    title: String,
+    subtitle: String,
+    icon: ImageVector,
+    backgroundColor: Color,
+    contentColor: Color,
+    onClick: () -> Unit
+) {
     Card(
+        onClick = onClick,
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        modifier = Modifier.height(110.dp).fillMaxWidth()
+    ) {
+        Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+            // Icon Background Circle
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .size(40.dp)
+                    .background(contentColor.copy(alpha = 0.1f), CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(imageVector = icon, contentDescription = null, tint = contentColor)
+            }
+
+            // Text Content
+            Column(modifier = Modifier.align(Alignment.BottomStart)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = contentColor
+                )
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = contentColor.copy(alpha = 0.8f)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SectionHeader(title: String, actionText: String, onActionClick: () -> Unit) {
+    Row(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
+        )
+        TextButton(onClick = onActionClick) {
+            Text(text = actionText, fontWeight = FontWeight.SemiBold)
+        }
+    }
+}
+
+@Composable
+fun FarmDashboardCard(farm: FarmDto, onClick: () -> Unit) {
+    Card(
+        onClick = onClick,
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        onClick = onClick
+        modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = field.name ?: "Unknown Farm",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                // Note: FarmDto might not have NDVI status yet.
-                // You can add logic here if your API returns it, otherwise show location or area.
-                Text(
-                    text = "ID: ${field.id}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+            Box(
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Grass,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
-            // Use standard icon instead of missing drawable
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = farm.name ?: "Unnamed Farm",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.LocationOn,
+                        contentDescription = null,
+                        modifier = Modifier.size(14.dp),
+                        tint = MaterialTheme.colorScheme.outline
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "ID: ${farm.id}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                }
+            }
+
             Icon(
-                imageVector = Icons.Default.Crop,
+                imageVector = Icons.Default.ChevronRight,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(40.dp)
+                tint = MaterialTheme.colorScheme.outlineVariant
             )
         }
     }
 }
 
 @Composable
-fun AddFieldFAB(navController: NavController) {
-    FloatingActionButton(
-        onClick = { navController.navigate("register_field") },
-        containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.onPrimary
+fun EmptyFarmStateCard(navController: NavController) {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { navController.navigate("register_field") },
+        shape = RoundedCornerShape(16.dp),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
     ) {
-        Icon(Icons.Default.Add, contentDescription = "Add Farm")
+        Column(
+            modifier = Modifier.padding(32.dp).fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = null,
+                modifier = Modifier.size(48.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                "No farms registered yet",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Medium
+            )
+            Text(
+                "Tap here to add your first field",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 }

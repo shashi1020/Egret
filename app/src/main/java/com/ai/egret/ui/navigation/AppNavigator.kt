@@ -9,11 +9,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel // <--- THE MAGIC IMPORT
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
+import com.ai.egret.ui.screens.CropHealthDetailScreen
+import com.ai.egret.ui.screens.CropHealthScreen
 import com.ai.egret.ui.screens.FarmInsightsScreen
 import com.ai.egret.ui.screens.FarmerDashboard
 import com.ai.egret.ui.screens.FieldRegistrationScreen
@@ -26,7 +28,12 @@ import com.ai.egret.ui.theme.M3Theme
 import com.ai.egret.viewmodels.WeatherViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.ai.egret.ui.screens.WeatherScreen
-
+import com.ai.egret.viewmodels.CropHealthViewModel
+import com.ai.egret.ui.screens.CropHealthHistoryScreen
+import com.ai.egret.ui.screens.SoilAnalysisResultScreen
+import com.ai.egret.ui.screens.SoilAnalysisScreen
+import com.ai.egret.viewmodels.CropHealthHistoryViewModel
+import com.ai.egret.ui.screens.SoilAnalysisHistoryScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,9 +83,39 @@ fun AppNavigator() {
 
 
                 composable("login") {
-                    // CLEAN: No need to pass ApiService anymore.
-                    // LoginScreen will use hiltViewModel() internally.
                     LoginScreen(navController)
+                }
+
+
+
+                composable(
+                    route = "crop_health/{farmId}",
+                    arguments = listOf(navArgument("farmId") { type = NavType.IntType })
+                ) {
+                    val farmId = it.arguments?.getInt("farmId") ?: return@composable
+                    CropHealthScreen(navController, farmId)
+                }
+
+
+
+                composable("crop_health_detail") {
+                    CropHealthDetailScreen(navController)
+                }
+                composable(
+                    route = "crop_health_detail/{analysisId}",
+                    arguments = listOf(navArgument("analysisId") { type = NavType.IntType })
+                ) {
+                    CropHealthDetailScreen(navController)
+                }
+
+
+
+                composable("crop_health_history") {
+                    val vm: CropHealthHistoryViewModel = hiltViewModel()
+                    LaunchedEffect(Unit) {
+                        vm.load()
+                    }
+                    CropHealthHistoryScreen(navController, vm)
                 }
 
 
@@ -87,7 +124,6 @@ fun AppNavigator() {
                 }
 
                 composable("market_prices") {
-                    // CLEAN: ViewModel is injected inside the screen
                     MarketPriceScreen(navController)
                 }
 
@@ -96,10 +132,8 @@ fun AppNavigator() {
                 }
 
                 composable("weather_forecast") {
-                    // MAGIC: Hilt automatically builds the VM with the Repo & API Key
                     val vm: WeatherViewModel = hiltViewModel()
 
-                    // Trigger initial load
                     LaunchedEffect(Unit) {
                         vm.loadForLocation(17.3850, 78.4867)
                     }
@@ -110,6 +144,29 @@ fun AppNavigator() {
                 composable("register_field") {
                     FieldRegistrationScreen(navController)
                 }
+
+
+                composable(
+                    route = "soil_analysis/{farmId}",
+                    arguments = listOf(navArgument("farmId") { type = NavType.IntType })
+                ) {
+                    val farmId = it.arguments?.getInt("farmId") ?: return@composable
+                    SoilAnalysisScreen(navController, farmId)
+                }
+
+
+                composable(
+                    route = "soil_analysis_result/{reportId}",
+                    arguments = listOf(navArgument("reportId") { type = NavType.IntType })
+                ) {
+                    SoilAnalysisResultScreen(navController)
+                }
+
+
+                composable("soil_analysis_history") {
+                    SoilAnalysisHistoryScreen(navController)
+                }
+
 
                 composable("notifications") {
                     NotificationsScreen()

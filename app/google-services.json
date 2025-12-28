@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "767615137863-32eo6qgroqe747kvovdb6nv0h72a554g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ai.egret",
+            "certificate_hash": "f47f237b83d483a1d74a5cdd6f2221489303cd00"
+          }
+        },
+        {
           "client_id": "767615137863-6r9ofco3p3cgtdsrjro3e502khgrifnk.apps.googleusercontent.com",
           "client_type": 3
         }
