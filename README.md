@@ -24,7 +24,7 @@ Egret's core innovation is its ability to synthesize conflicting data points int
 
 ### 2. 🧠 Explainable AI Advisory (GenAI Integration)
 Instead of showing raw charts, Egret "talks" to the farmer.
-* **Natural Language Generation:** Uses **Google Gemini 1.5 Flash** to translate complex agronomic data into simple, human-readable advice in English or regional languages (e.g., Telugu).
+* **Natural Language Generation:** Uses **Google Gemini 2.5 Flash** to translate complex agronomic data into simple, human-readable advice in English or regional languages (e.g., Telugu).
 * **Context-Aware:** The AI understands crop stages (Vegetative vs. Reproductive) and adjusts recommendations accordingly (e.g., "Avoid Nitrogen now to prevent disease spread").
 * **Actionable Steps:** Provides specific checklists for immediate treatment, fertilizer management, and preventive care.
 
